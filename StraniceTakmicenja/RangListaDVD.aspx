@@ -1,0 +1,405 @@
+﻿<%@ Page Title="Rang Lista - DVD" Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="RangListaDVD.aspx.cs" Inherits="ProgramTakmicenja.StraniceTakmicenja.RangListaDVD" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        /* Tab kontrola stilovi */
+        .tab-container { 
+            margin: 20px 0 30px 0;
+            background: #fff;
+        }
+        
+        .tab-buttons { 
+            display: flex; 
+            flex-wrap: wrap;
+            border-bottom: 3px solid #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button { 
+            padding: 12px 20px; 
+            background: #f8f9fa; 
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px 8px 0 0;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .tab-button:hover {
+            background: #e9ecef;
+            color: #007bff;
+        }
+        
+        .tab-button.active { 
+            background: #007bff; 
+            color: white;
+            border-color: #007bff;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #007bff;
+        }
+        
+        /* Ostali stilovi */
+        .print-optimized {
+            width: 100%;
+        }
+        
+        .rang-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .rang-table, .rang-table th, .rang-table td {
+            border: 1px solid #dee2e6;
+        }
+        
+        .rang-table th, .rang-table td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .rang-table th {
+            background-color: #343a40;
+            color: white;
+            font-weight: bold;
+            border-color: #454d55;
+        }
+        
+        .rang-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .rang-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .naziv-ekipe {
+            text-align: left;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        /* Boje za prva tri mesta */
+        .rang-1 { 
+            background-color: #ffd700 !important; 
+            font-weight: bold;
+            color: #000 !important;
+        }
+        
+        .rang-2 { 
+            background-color: #c0c0c0 !important; 
+            font-weight: bold;
+            color: #000 !important;
+        }
+        
+        .rang-3 { 
+            background-color: #cd7f32 !important; 
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        /* Stilovi za štampu */
+        @media print {
+            .no-print, nav, header, footer, .breadcrumb, .tab-buttons {
+                display: none !important;
+            }
+            
+            body {
+                margin: 0 !important;
+                padding: 20px !important;
+                font-size: 12pt;
+            }
+            
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .page-title {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 18pt;
+                color: #000 !important;
+            }
+            
+            .rang-table {
+                font-size: 11pt;
+                box-shadow: none !important;
+            }
+            
+            .rang-table th {
+                background-color: #ddd !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+        
+        .print-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+            float: right;
+        }
+        
+        .print-btn:hover {
+            background: #c0392b;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 16px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb strong {
+            color: #495057;
+        }
+        
+        /* Clearfix za float elemente */
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        .page-title {
+            float: left;
+            margin: 0;
+            padding: 0;
+            color: #2c3e50;
+        }
+        
+        .page-title small {
+            display: block;
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        /* Media queries za responsive tab-ove */
+        @media (max-width: 768px) {
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 13px;
+                min-width: 100px;
+            }
+            
+            .print-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tab-button {
+                padding: 8px 10px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+            
+            .rang-table th, .rang-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="container">
+        <!-- Navigacija -->
+        <div class="breadcrumb no-print">
+            <a href="RezultatiTakmicenja.aspx">Такмичења</a> > 
+            <strong>ДВД - Ранг листа</strong>
+        </div>
+        
+        <!-- Naslov i dugme za štampu -->
+        <div class="clearfix">
+            <h1 class="page-title">Ватрогасни Савез Србије<br/>
+            <small>Ранг листа - Добровољци (ДВД)</small></h1>
+            
+            <!-- Dugme za štampu -->
+            <div class="no-print">
+                <button class="print-btn" onclick="window.print()">
+                    🖨️ Штампај ранг листу
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab kontrola (4 taba) -->
+        <div class="tab-container no-print">
+            <div class="tab-buttons">
+                <asp:LinkButton ID="lnkBMuski" runat="server" 
+                    CssClass="tab-button active" 
+                    OnClick="lnkBMuski_Click">
+                    <i class="fas fa-mars" style="margin-right: 5px;"></i>ДВД Б - Мушки
+                </asp:LinkButton>
+                
+                <asp:LinkButton ID="lnkBZenski" runat="server" 
+                    CssClass="tab-button" 
+                    OnClick="lnkBZenski_Click">
+                    <i class="fas fa-venus" style="margin-right: 5px;"></i>ДВД Б - Жене
+                </asp:LinkButton>
+                
+                <asp:LinkButton ID="lnkAMuski" runat="server" 
+                    CssClass="tab-button" 
+                    OnClick="lnkAMuski_Click">
+                    <i class="fas fa-mars" style="margin-right: 5px;"></i>ДВД А - Мушки
+                </asp:LinkButton>
+                
+                <asp:LinkButton ID="lnkAZenski" runat="server" 
+                    CssClass="tab-button" 
+                    OnClick="lnkAZenski_Click">
+                    <i class="fas fa-venus" style="margin-right: 5px;"></i>ДВД А - Жене
+                </asp:LinkButton>
+            </div>
+        </div>
+
+        <!-- Rang lista -->
+        <div class="print-optimized">
+            <asp:GridView ID="GridViewDVD" runat="server" 
+                CssClass="rang-table" 
+                AutoGenerateColumns="false" 
+                ShowHeader="true">
+                <Columns>
+                    <asp:TemplateField HeaderText="#" 
+                        HeaderStyle-Width="5%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center">
+                        <ItemTemplate>
+                            <%# Container.DataItemIndex + 1 %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                        
+                    <asp:BoundField DataField="NazivEkipe" HeaderText="Назив Екипе" 
+                        HeaderStyle-Width="25%" 
+                        ItemStyle-CssClass="naziv-ekipe" 
+                        HeaderStyle-HorizontalAlign="Center" />
+                        
+                    <asp:BoundField DataField="PocetniBodovi" HeaderText="Почетни Бодови" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                        
+                    <asp:BoundField DataField="SrednjaVrednostMVP" HeaderText="Време МВП" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                        
+                    <asp:BoundField DataField="ZbirGresakaMVP" HeaderText="Грешке МВП" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                        
+                    <asp:BoundField DataField="SrednjaVrednostStafeta" HeaderText="Време Штафете" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                        
+                    <asp:BoundField DataField="ZbirGresakaStafeta" HeaderText="Грешке Штафете" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                        
+                    <asp:BoundField DataField="UkupanRezultat" HeaderText="Укупан Резултат" 
+                        HeaderStyle-Width="10%" 
+                        ItemStyle-Font-Bold="true" 
+                        ItemStyle-HorizontalAlign="Center" 
+                        HeaderStyle-HorizontalAlign="Center"
+                        DataFormatString="{0:0.00}" />
+                </Columns>
+        
+                <EmptyDataTemplate>
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #6c757d; font-style: italic;">
+                            <div style="font-size: 18px; margin-bottom: 10px;">
+                                <i class="fas fa-info-circle" style="font-size: 48px; color: #6c757d; margin-bottom: 15px;"></i>
+                            </div>
+                            <strong style="font-size: 16px;">Нема података за приказ</strong><br />
+                            <span style="font-size: 14px;">
+                                Тренутно нема екипа у овој категорији или нема унетих резултата.
+                            </span>
+                        </td>
+                    </tr>
+                </EmptyDataTemplate>
+            </asp:GridView>
+        </div>
+        
+        <!-- Podnožje za štampu -->
+        <div style="margin-top: 30px; font-size: 10pt; text-align: center;" class="no-print">
+            Генерисано: <%= DateTime.Now.ToString("dd.MM.yyyy. HH:mm") %> |
+            Корисник: <%= User.Identity.Name %> |
+            Категорија: <asp:Label ID="lblTrenutnaKategorija" runat="server" Text="ДВД Б - Мушки" />
+        </div>
+    </div>
+
+    <!-- Font Awesome za ikonice -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script type="text/javascript">
+        // Dodajemo hover efekat za tab dugmad
+        document.addEventListener('DOMContentLoaded', function () {
+            var tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(function (button) {
+                button.addEventListener('mouseenter', function () {
+                    if (!this.classList.contains('active')) {
+                        this.style.backgroundColor = '#e9ecef';
+                        this.style.color = '#007bff';
+                    }
+                });
+
+                button.addEventListener('mouseleave', function () {
+                    if (!this.classList.contains('active')) {
+                        this.style.backgroundColor = '';
+                        this.style.color = '';
+                    }
+                });
+            });
+        });
+    </script>
+</asp:Content>
