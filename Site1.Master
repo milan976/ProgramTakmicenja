@@ -1,0 +1,145 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="ProgramTakmicenja.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="datatables/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <link href="fontawesome/css/all.css" rel="stylesheet" />
+    <link href="css/customstylesheet.css" rel="stylesheet" />
+
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="bootstrap/js/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnableScriptGlobalization="true" EnableScriptLocalization="true" />
+        <div>
+            <!-- Izgled navigacije u hederu -->
+            <nav class="navbar bg-body-tertiary">
+                <a class="navbar-brand" href="#">
+                    <img src="<%= ResolveUrl("~/imgs/VSS-logo-notxt.png\" width=\"55\" height=\"55\"") %>"/>
+                    Програм Такмичења Ватрогасног Савеза Србије
+                </a>
+
+                
+
+                <nav class="navbar navbar-expand-md bg-body-tertiary">
+                  <div class="container-fluid">
+                    <a class="navbar-brand" href="https://vss.org.rs/">ВСС</a><div class="collapse navbar-collapse" id="navbarNav">
+                      <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="<%= ResolveUrl("~/default.aspx") %>">Почетна</a>
+                        </li>
+                        <li class="nav-item active">
+                          <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/TakmicenjaPage.aspx") %>">Такмичења</a>
+                        </li>
+                        <li class="nav-item active">
+                          <a class="nav-link" href="<%= ResolveUrl("#") %>">О програму</a>
+                        </li>
+                      </ul>
+                         <ul class="navbar-nav">
+                          <li class="nav-item active">
+                              <asp:LinkButton class="nav-link" ID="Izlaz" runat="server" OnClick="Izlaz_Click" Visible="False">Излаз</asp:LinkButton>
+                          </li>
+                      </ul>                      
+                        <ul class="navbar-nav">
+                          <li class="nav-item active">
+                              <asp:LinkButton class="nav-link" ID="Sudije" runat="server" OnClick="Sudije_Click" Visible="False">Судије</asp:LinkButton>
+                          </li>
+                      </ul>
+                      <ul class="navbar-nav">
+                          <li class="nav-item active">
+                              <asp:LinkButton class="nav-link" ID="Pozdrav" runat="server" OnClick="Pozdrav_Click" Visible="False">Поздрав Корисниче </asp:LinkButton>
+                          </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+            </nav>
+            <asp:PlaceHolder ID="phTakmicenjaMeni" runat="server" Visible="False">
+                <div class="bg-light p-2">
+                    <div class="container-md"> 
+                        <ul class="nav nav-pills justify-content-end">
+                            <li class="nav-item">
+                                <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/Kategorije/Podmladak.aspx") %>">Подмладак</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/Kategorije/Juniori.aspx") %>">Јуниори</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/Kategorije/Dobrovoljci.aspx")%>">ДВД</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/Kategorije/Profesionalci.aspx")%>">Професионалци</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<%= ResolveUrl("~/StraniceTakmicenja/RezultatiTakmicenja.aspx") %>">Резултати</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </asp:PlaceHolder>
+
+
+        </div>
+
+        <!-- Main Content Placeholder -->
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+
+            </asp:ContentPlaceHolder>
+        </div>
+        <!-- Main Content Placeholder -->
+
+        <footer>
+            <div id="footer1" class="container-fluid">
+                <div class="row">
+                    <div class="d-flex justify-content-between w-100">
+                        <!-- Leva Strana -->
+                        <div>
+                            <asp:LinkButton class="footerlinks" ID="Administrator" runat="server" OnClick="Administrator_Click">Администратор</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" ID="AdminKorisnika" runat="server" OnClick="AdminKorisnika_Click" Visible="False">Адм. korisnika</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" ID="UnosEkipa" runat="server" OnClick="UnosEkipa_Click" Visible="False">Унос екипа</asp:LinkButton>
+                            &nbsp;
+                                <asp:LinkButton class="footerlinks" ID="UnosSudija" runat="server" OnClick="UnosSudija_Click" Visible="False">Унос судија</asp:LinkButton>
+                            &nbsp;
+                            <asp:LinkButton class="footerlinks" ID="Pravilnici" runat="server" OnClick="Pravilnici_Click" Visible="False">Правилници и бодовање</asp:LinkButton>
+                            &nbsp;
+                         </div>
+                        
+                        <!-- Desna strana -->
+                        <div>
+                            <asp:LinkButton class="footerlinks" ID="EditEkipa" runat="server" OnClick="EditEkipa_Click">Преглед/промена Екипа</asp:LinkButton>
+                            &nbsp;
+                        </div>
+                        <div>
+                            <asp:LinkButton class="footerlinks" ID="Takmicenja" runat="server" OnClick="RezultatiTakmicenja_Click">Такмичење</asp:LinkButton>
+                            &nbsp;
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+            <div id="footer2" class="container-fluid">
+                <div class="row">
+                <p class="text-center">&copy Сва права. <a class="footerlinks" href="#" target="_blank">Милан Ђорђевић</a></p>
+                </div>
+            </div>
+        </footer>
+
+    </form>
+
+   
+</body>
+</html>
